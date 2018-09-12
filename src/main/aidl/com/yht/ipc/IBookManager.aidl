@@ -1,6 +1,7 @@
 // IBookManager.aidl
 package com.yht.ipc;
 // Declare any non-default types here with import statements
+import com.yht.ipc.Book;
 
 interface IBookManager {
     /**
@@ -9,6 +10,6 @@ interface IBookManager {
      */
     void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat,
             double aDouble, String aString);
-//    List<Book> getBookList();
-//    void addBook(Book book);
+    List<Book> getBookList();
+    void addBook(in Book book);
 }
