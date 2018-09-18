@@ -4,6 +4,9 @@
         <import type="android.databinding.ObservableInt"/>
         <import type="android.databinding.ObservableField"/>
         <variable
+            name="testBook"
+            type="com.yht.ipc.Book"/>
+        <variable
             name="name"
             type="String"/>
         <variable
@@ -71,7 +74,7 @@
             android:layout_marginStart="8dp"
             android:ems="10"
             android:hint="Name"
-            android:text="@{inputName.get()}"
+            android:text="@={testBook.testStr.get()}"
             android:layout_centerHorizontal="true"
             android:inputType="textPersonName"
             android:minWidth="200dp" />

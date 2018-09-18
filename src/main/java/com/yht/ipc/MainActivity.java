@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     ObservableField<String> display;
     ObservableField<String> inputName;
     ActivityMainBinding binding;
+    Book testbook ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,13 +47,17 @@ public class MainActivity extends AppCompatActivity {
         binding.setDisplay(display);
         binding.setInputName(inputName);
         binding.setTime(new Date());
+        binding.setName("aaaAa");
+        testbook = new Book("testBBB");
+        testbook.setTestStr(new ObservableField<String>("BBBBNNNNN"));
+        binding.setTestBook(testbook);
         binding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (iBookManager != null) {
-                    if (!TextUtils.isEmpty(inputName.get())) {
+                    if (!TextUtils.isEmpty(testbook.getTestStr().get())) {
                         try {
-                            iBookManager.addBook(new Book(inputName.get()));
+                            iBookManager.addBook(new Book(testbook.getTestStr().get()));
                             books = iBookManager.getBookList();
                             if (books != null) {
                                 sBuilder = new StringBuilder();

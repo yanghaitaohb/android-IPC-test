@@ -1,5 +1,6 @@
 package com.yht.ipc;
 
+import android.databinding.ObservableField;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,6 +11,15 @@ import android.os.Parcelable;
 public class Book implements Parcelable{
     long bookId;
     String bookName;
+    public ObservableField<String> testStr = new ObservableField<>();
+
+    public ObservableField<String> getTestStr() {
+        return testStr;
+    }
+
+    public void setTestStr(ObservableField<String> testStr) {
+        this.testStr = testStr;
+    }
 
     public Book(long bookId, String bookName) {
         this.bookId = bookId;
