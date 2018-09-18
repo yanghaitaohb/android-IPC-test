@@ -4,6 +4,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Observable;
+import android.databinding.DataBindingUtil;
+import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +18,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yht.ipc.databinding.ActivityMainBinding;
+
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,33 +28,49 @@ public class MainActivity extends AppCompatActivity {
     IBookManager iBookManager;
     List<Book> books;
     StringBuilder sBuilder;
+    ObservableInt lastId;
+    ObservableField<String> display;
+    ObservableField<String> inputName;
+    ActivityMainBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final EditText editText = findViewById(R.id.editText);
-        final TextView textView = findViewById(R.id.tv);
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+//        final EditText editText = (EditText) findViewById(R.id.editText);
+//        final TextView textView = (TextView) findViewById(R.id.tv);
+        lastId = new ObservableInt();
+        display = new ObservableField<>();
+        inputName = new ObservableField<>();
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setLastId(lastId);
+        binding.setDisplay(display);
+        binding.setInputName(inputName);
+        binding.setTime(new Date());
+        binding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (iBookManager != null) {
-                    if (!TextUtils.isEmpty(editText.getText())) {
+                    if (!TextUtils.isEmpty(inputName.get())) {
                         try {
-                            iBookManager.addBook(new Book(editText.getText().toString()));
+                            iBookManager.addBook(new Book(inputName.get()));
                             books = iBookManager.getBookList();
                             if (books != null) {
                                 sBuilder = new StringBuilder();
                                 for (Book b : books) {
                                     sBuilder.append(b.bookId).append(" : ").append(b.bookName).append("\n");
                                 }
-                                textView.setText(sBuilder);
+                                display.set(sBuilder.toString());
+                                int size = books.size();
+                                if (size != 0) {
+                                    lastId.set((int)books.get(size - 1).bookId);
+                                }
                             }
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        Toast.makeText(MainActivity.this, "不可为空", Toast.LENGTH_SHORT).show();
                     }
-                    else
-                        Toast.makeText(MainActivity.this,"不可为空", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(MainActivity.this, "等待连接", Toast.LENGTH_SHORT).show();
                     connectServer();
